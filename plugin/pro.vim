@@ -163,16 +163,22 @@ fun! s:Completion(ArgLead, CmdLine, CursorPos)
 endfun
 
 fun! s:SelectDefault()
-  if has_key(g:, 'pro#default')
-    if s:Selected ==# '' && s:HasConfig(get(g:, 'pro#default', '_'))
-      call s:Select(g:pro#default)
-    endif
+  if s:Selected !=# ''
     augroup ProVimInit
       autocmd!
     augroup END
     return v:true
   endif
-  return v:false
+
+  if !has_key(g:, 'pro#default') || !s:HasConfig(g:pro#default)
+    return v:false
+  endif
+
+  call s:Select(g:pro#default)
+  augroup ProVimInit
+    autocmd!
+  augroup END
+  return v:true
 endfun
 
 fun! s:Init()
