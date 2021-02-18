@@ -52,10 +52,13 @@ g:pro#default						*g:pro#default*
 >
 	:Pro debug
 <
-	If {config} is not provided, prints out the currently selected config,
+	If {config} is not provided, prints out the name of selected config,
 	unless ! was provided, in which case the settings from the currently
 	selected config are reloaded.
-
+	Reload configuration when .exrc file is sourced:
+>
+	autocmd SourcePost .exrc silent Pro!
+<
 	|:verbose| modifier prints out configurations and their settings.
 >
 	:verbose Pro
