@@ -97,7 +97,7 @@ fun! s:Select(name) abort
     call s:LetConfig(g:pro, '_')
   endif
   call s:LetConfig(g:pro, a:name)
-  doautocmd User ProUpdate
+  silent doautocmd User ProUpdate
 endfun
 
 fun! s:HasConfig(name)
@@ -147,10 +147,6 @@ fun! s:LetDefault() abort
   endfor
 endfun
 
-fun! s:Completion(ArgLead, CmdLine, CursorPos)
-  return filter(pro#configs(), 'v:val =~ ''\V\^''.a:ArgLead')
-endfun
-
 fun! s:PrintConfig(name) abort
   echohl Function
   echo a:name.(a:name ==# s:Selected ? ' *' : '')
@@ -162,17 +158,34 @@ fun! s:PrintConfig(name) abort
   endfor
 endfun
 
+fun! s:Completion(ArgLead, CmdLine, CursorPos)
+  return filter(pro#configs(), 'v:val =~ ''\V\^''.a:ArgLead')
+endfun
+
+fun! s:SelectDefault()
+  if has_key(g:, 'pro#default')
+    if s:Selected ==# '' && s:HasConfig(get(g:, 'pro#default', '_'))
+      call s:Select(g:pro#default)
+    endif
+    augroup ProVimInit
+      autocmd!
+    augroup END
+    return v:true
+  endif
+  return v:false
+endfun
+
 fun! s:Init()
-  if s:Selected ==# '' && s:HasConfig(get(g:, 'pro#default', '_'))
-    call s:Select(g:pro#default)
+  if !s:SelectDefault() && exists('##SourcePost')
+    augroup ProVimInit
+      autocmd SourcePost * call s:SelectDefault()
+    augroup END
   endif
 endfun
 
-" Autocommands -----------------------------------------------------------------
-
-augroup ProVim
+augroup ProVimInit
   autocmd!
-  autocmd VimEnter * call s:Init() | autocmd ProVim SourcePost * call s:Init()
+  autocmd VimEnter * call s:Init()
 augroup END
 
 " vim: et sw=2 sts=2 tw=80 :
