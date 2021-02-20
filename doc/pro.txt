@@ -46,6 +46,9 @@ g:pro#default						*g:pro#default*
 >
 	let g:pro#default = 'debug'
 <
+	Might not fully work without support for |SourcePost| event,
+	introduced in patch 8.1.0729.
+
 
 :Pro[!] [{config}]					*:Pro*
 	Apply settings from {config}.
