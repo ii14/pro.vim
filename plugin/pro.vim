@@ -53,13 +53,16 @@ fun! s:Command(name, mods, bang) abort
     endif
   endfor
 
-  if a:name ==# '?'
-    echo s:Selected
-    return
-  endif
-
   " Bang
-  let l:name = a:name !=# '' ? a:name : a:bang ? s:Selected : ''
+  if a:name !=# ''
+    let l:name = a:name
+  elseif !a:bang
+    let l:name = ''
+  elseif s:Selected !=# ''
+    let l:name = s:Selected
+  else
+    let l:name = get(g:, 'pro#default', '')
+  endif
 
   " Validate
   if l:name !=# ''

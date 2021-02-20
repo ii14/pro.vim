@@ -54,7 +54,7 @@ g:pro#default						*g:pro#default*
 <
 	If {config} is not provided, prints out the name of selected config,
 	unless ! was provided, in which case the settings from the currently
-	selected config are reloaded.
+	selected or default config are reloaded.
 	Reload configuration when .exrc file is sourced:
 >
 	autocmd SourcePost .exrc silent Pro!
